@@ -11,6 +11,17 @@ def init():
     initialize()
     print('database intialized')
     
+@app.cli.command("add_student", help="Add a new student")
+@click.argument("name", nargs=-1)
+def add_student(name):
+    name = " ".join(name)
+    from App.models import User
+    user = User.query.first()
+    if user:
+        user.addStudent(name)
+        print(f'Student {name} added!')
+    else:
+        print("No users found.")
 
 
 
