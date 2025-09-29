@@ -19,6 +19,10 @@ def init():
 @click.argument("name", nargs=-1)
 def add_student(name):
     name = " ".join(name)
+    if name == "":
+        print("Please provide a name for the student.")
+        return
+    
     from App.models import User
     user = User.query.first()
     if user:
@@ -72,6 +76,9 @@ def make_request(hours):
     from App.models import User
     user = User.query.first()
     if user:
+        if user.getIsStaff():
+            print("This function is for Student access only")
+            return
         from App.models import Student
         student = Student.query.filter_by(studentID = user.getSelectedStudentID()).first()
         if student:
@@ -107,9 +114,44 @@ def view_accolades():
     from App.models import User
     user = User.query.first()
     if user:
+        if user.getIsStaff():
+            print("This function is for Student access only")
+            return
         from App.models import Student
         student = Student.query.filter_by(studentID = user.getSelectedStudentID()).first()
         if student:
             student.viewAccolades()
+    else:
+        print("No users found.")
+        
+@app.cli.command("view_requests", help="View all pending requests from students")
+def view_requests():
+    from App.models import User
+    user = User.query.first()
+    if user:
+        if not user.getIsStaff():
+            print("This function is for Staff access only")
+            return
+        
+        isStudent = user.getIsStudent()
+        isStaff = user.getIsStaff()
+        selectedStudentID = user.getSelectedStudentID()
+            
+        from App.models import Staff
+        staff = Staff.query.filter_by().first()
+        if staff:
+            staff.setIsStudent(isStudent)
+            staff.setIsStaff(isStaff)
+            staff.setSelectedStudentID(selectedStudentID)
+            staff.viewRequests()
+        else:
+            newstaff = Staff()
+            newstaff.setIsStudent(isStudent)
+            newstaff.setIsStaff(isStaff)
+            newstaff.setSelectedStudentID(selectedStudentID)
+            from App.database import db
+            db.session.add(newstaff)
+            db.session.commit()
+            newstaff.viewRequests()
     else:
         print("No users found.")

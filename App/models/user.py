@@ -14,6 +14,9 @@ class User(db.Model):
         self.isStaff = False
         self.selectedStudentID = None
         
+    def getID(self):
+        return self.id
+        
     def getIsStudent(self):
         return self.isStudent
     
@@ -99,7 +102,7 @@ class Student(User):
         
     def makeRequest(self, hours):
         if not self.getIsStudent():
-            print ("You have Staff access only")
+            print ("This function is for Student access only")
             return
         
         if self.getRequestPending():
@@ -114,7 +117,7 @@ class Student(User):
         
     def withdrawRequest(self):
         if not self.getIsStudent():
-            print ("You have Staff access only")
+            print ("This function is for Student access only")
             return
         
         if not self.getRequestPending():
@@ -129,7 +132,7 @@ class Student(User):
             
     def viewAccolades(self):
         if not self.getIsStudent():
-            print ("You have Staff access only")
+            print ("This function is for Student access only")
             return
         
         hours = Hours.query.filter_by(studentID = self.getID()).first()
@@ -156,9 +159,12 @@ class Student(User):
 class Staff(User):
     userID = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     
+    def __init__(self):
+        pass
+    
     def viewRequests(self):
         if self.getIsStaff() == False:
-            print("You have Student access only")
+            print("This function is for Staff access only")
             return
         
         list = Request.query.filter_by().all()
@@ -167,7 +173,7 @@ class Staff(User):
             
     def rejectRequest(self, requestID):
         if self.getIsStaff() == False:
-            print("You have Student access only")
+            print("This function is for Staff access only")
             return
         
         request = Request.query.filter_by(id = requestID).first()
@@ -180,7 +186,7 @@ class Staff(User):
             
     def confirmRequest(self, requestID):
         if self.getIsStaff() == False:
-            print("You have Student access only")
+            print("This function is for Staff access only")
             return
         
         request = Request.query.filter_by(id = requestID).first()
