@@ -84,4 +84,19 @@ def make_request(hours):
     else:
         print("No users found.")
         
-
+@app.cli.command("withdraw_request", help="Withdraw a pending request to staff to log your hours ")
+def withdraw_request():
+    from App.models import User
+    user = User.query.first()
+    if user:
+        from App.models import Student
+        student = Student.query.filter_by(studentID = user.getSelectedStudentID()).first()
+        if student:
+            if not student.getRequestPending():
+                print("This student does not have a pending request to withdraw")
+                return
+            else:
+                student.withdrawRequest()
+                print("Request withdrawn successfully.")
+    else:
+        print("No users found.")
