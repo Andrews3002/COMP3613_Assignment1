@@ -38,16 +38,20 @@ class User(db.Model):
             print("ID: ", i.getID(), "Name: ", i.getName())
     
     def viewLeaderboard(self):
-        list = Hours.query.order_by(Hours.getHours().desc()).all()
+        list = Hours.query.order_by(Hours.hours.desc()).all()
         count = 1
         for i in list:
-            student = Student.query.filter_by(Student.getID() == i.getStudentID()).first()
-            print("Rank: ", count, "Name : ", student.getName(), "Hours: ", i.getHours())
+            student = Student.query.filter_by(studentID = i.getStudentID()).first()
+            print("| Rank: ", count, "| Name: ", student.getName(), "| Hours: ", i.getHours(), "|")
             count += 1
             
     def addStudent(self, name):
         student = Student(name)
         db.session.add(student)
+        db.session.commit()
+        
+        HoursEntry = Hours(student.getID(), 0)
+        db.session.add(HoursEntry)
         db.session.commit()
         
     def switchToStudent(self, studentID):
@@ -77,7 +81,7 @@ class Student(User):
     
     def __init__(self, name):
         self.name = name
-        
+    
     def getID(self):
         return self.studentID
     
@@ -117,7 +121,7 @@ class Student(User):
             print("This student does not have a pending request to withdraw")
             return
         
-        request = Request.query.filter_by(Request.getStudentID == self.getID()).first()
+        request = Request.query.filter_by(studentID = self.getID()).first()
         if request:
             db.session.delete(request)
             self.setRequestPending(False)
@@ -128,7 +132,7 @@ class Student(User):
             print ("You have Staff access only")
             return
         
-        hours = Hours.query.filter_by(Hours.getStudentID == self.getID()).first()
+        hours = Hours.query.filter_by(studentID = self.getID()).first()
         
         if hours:
             if hours.getTenHourMS():
@@ -166,9 +170,9 @@ class Staff(User):
             print("You have Student access only")
             return
         
-        request = Request.query.filter_by(Request.getID() == requestID).first()
+        request = Request.query.filter_by(id = requestID).first()
         
-        student = Student.query.filter_by(Student.getID() == request.getStudentID()).first()
+        student = Student.query.filter_by(id = request.getStudentID()).first()
         if student:
             student.setRequestPending(False)
             db.session.delete(request)
@@ -179,9 +183,9 @@ class Staff(User):
             print("You have Student access only")
             return
         
-        request = Request.query.filter_by(Request.getID() == requestID).first()
+        request = Request.query.filter_by(id = requestID).first()
         
-        student = Student.query.filter_by(Student.getID() == request.getStudentID()).first()
+        student = Student.query.filter_by(id = request.getStudentID()).first()
         if student:
             student.setRequestPending(False)
             self.logHours(request.getHours(), student.getID())
@@ -190,7 +194,7 @@ class Staff(User):
        
             
     def logHours(self, hours, studentID): 
-        hoursEntry = Hours.query.filter_by(Hours.getStudentID() == studentID).first()
+        hoursEntry = Hours.query.filter_by(studentID = studentID).first()
         if hoursEntry:
             hoursEntry.setHours(hoursEntry.getHours() + hours)
             db.session.commit()

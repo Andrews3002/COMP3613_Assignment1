@@ -3,7 +3,7 @@ from App.database import db
 class Hours(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     studentID = db.Column(db.Integer, db.ForeignKey('student.studentID'), nullable=False)
-    hours = db.Column(db.Float, nullable=False)
+    hours = db.Column(db.Float, default=0.0)
     tenHourMilestone = db.Column(db.Boolean, default=False)
     twentyFiveHourMilestone = db.Column(db.Boolean, default=False)
     fiftyHourMilestone = db.Column(db.Boolean, default=False)

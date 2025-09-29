@@ -1,7 +1,11 @@
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+
 import click
 from App.database import get_migrate
 from App.main import create_app
 from App.controllers import initialize
+
 
 app = create_app()
 migrate = get_migrate(app)
@@ -53,4 +57,11 @@ def switch_to_staff():
     else:
         print("No users found.")     
 
-        
+@app.cli.command("view_leaderboard", help="View the leaderboard of students by hours")
+def view_leaderboard():
+    from App.models import User
+    user = User.query.first()
+    if user:
+        user.viewLeaderboard()
+    else:
+        print("No users found.") 
