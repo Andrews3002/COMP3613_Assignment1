@@ -178,7 +178,7 @@ class Staff(User):
         
         request = Request.query.filter_by(id = requestID).first()
         
-        student = Student.query.filter_by(id = request.getStudentID()).first()
+        student = Student.query.filter_by(studentID = request.getStudentID()).first()
         if student:
             student.setRequestPending(False)
             db.session.delete(request)

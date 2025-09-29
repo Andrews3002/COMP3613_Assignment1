@@ -155,3 +155,24 @@ def view_requests():
             newstaff.viewRequests()
     else:
         print("No users found.")
+        
+@app.cli.command("reject_request", help="Reject a student's request")
+@click.argument("request_id", type=int)
+def reject_request(request_id):
+    from App.models import User
+    user = User.query.first()
+    if user:
+        if not user.getIsStaff():
+            print("This function is for Staff access only")
+            return
+        
+        from App.models import Staff, Request
+        staff = Staff.query.filter_by().first()
+        request = Request.query.filter_by(id = request_id).first()
+        if staff and request:
+            staff.rejectRequest(request_id)
+            print(f"Request {request_id} rejected.")
+        else:
+            print("No request with ID:", request_id, "was found.")
+    else:
+        print("No users found.")
