@@ -32,7 +32,16 @@ def list_students():
     else:
         print("No users found.")
 
-        
+@app.cli.command("switch_to_student", help="Switch to a student role")
+@click.argument("student_id", type=int)
+def switch_to_student(student_id):
+    from App.models import User
+    user = User.query.first()
+    if user:
+        user.switchToStudent(student_id)
+        print(f'Switched to student with ID {student_id}')
+    else:
+        print("No users found.")     
 
         
 
