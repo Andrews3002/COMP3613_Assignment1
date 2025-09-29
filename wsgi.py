@@ -65,3 +65,23 @@ def view_leaderboard():
         user.viewLeaderboard()
     else:
         print("No users found.") 
+        
+@app.cli.command("make_request", help="Make a request to staff to log your hours")
+@click.argument("hours", type=float)
+def make_request(hours):
+    from App.models import User
+    user = User.query.first()
+    if user:
+        from App.models import Student
+        student = Student.query.filter_by(studentID = user.getSelectedStudentID()).first()
+        if student:
+            if student.getRequestPending():
+                print("You already have a pending request.")
+                return
+            else:
+                student.makeRequest(hours)
+                print("Request made successfully.")
+    else:
+        print("No users found.")
+        
+
