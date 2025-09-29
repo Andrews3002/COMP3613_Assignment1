@@ -176,3 +176,24 @@ def reject_request(request_id):
             print("No request with ID:", request_id, "was found.")
     else:
         print("No users found.")
+        
+@app.cli.command("confirm_request", help="Confirm a student's request and log their hours")
+@click.argument("request_id", type=int)
+def confirm_request(request_id):
+    from App.models import User
+    user = User.query.first()
+    if user:
+        if not user.getIsStaff():
+            print("This function is for Staff access only")
+            return
+        
+        from App.models import Staff, Request
+        staff = Staff.query.filter_by().first()
+        request = Request.query.filter_by(id = request_id).first()
+        if staff and request:
+            staff.confirmRequest(request_id)
+            print(f"Request {request_id} confirmed and hours logged.")
+        else:
+            print("No request with ID:", request_id, "was found.")
+    else:
+        print("No users found.")

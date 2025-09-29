@@ -191,7 +191,7 @@ class Staff(User):
         
         request = Request.query.filter_by(id = requestID).first()
         
-        student = Student.query.filter_by(id = request.getStudentID()).first()
+        student = Student.query.filter_by(studentID = request.getStudentID()).first()
         if student:
             student.setRequestPending(False)
             self.logHours(request.getHours(), student.getID())
@@ -203,9 +203,11 @@ class Staff(User):
         hoursEntry = Hours.query.filter_by(studentID = studentID).first()
         if hoursEntry:
             hoursEntry.setHours(hoursEntry.getHours() + hours)
+            hoursEntry.setMilestones()
             db.session.commit()
         else:
             hoursEntry = Hours(studentID, hours)
+            hoursEntry.setMilestones()
             db.session.add(hoursEntry)
             db.session.commit()
     
