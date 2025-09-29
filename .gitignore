@@ -156,6 +156,5 @@ cython_debug/
 node_modules/
 /wsgi_copy.py
 /App/models/user_copy.py
-/App/models/hours.py
 /App/models/request.py
 /App/models/user.py
