@@ -23,7 +23,14 @@ def add_student(name):
     else:
         print("No users found.")
 
-
+@app.cli.command("list_students", help="Lists all students in the database")
+def list_students():
+    from App.models import User
+    user = User.query.first()
+    if user:
+        user.listStudents()
+    else:
+        print("No users found.")
 
         
 
