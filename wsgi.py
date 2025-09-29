@@ -100,3 +100,16 @@ def withdraw_request():
                 print("Request withdrawn successfully.")
     else:
         print("No users found.")
+
+
+@app.cli.command("view_accolades", help="View your accolades")
+def view_accolades():
+    from App.models import User
+    user = User.query.first()
+    if user:
+        from App.models import Student
+        student = Student.query.filter_by(studentID = user.getSelectedStudentID()).first()
+        if student:
+            student.viewAccolades()
+    else:
+        print("No users found.")
