@@ -43,6 +43,14 @@ def switch_to_student(student_id):
     else:
         print("No users found.")     
 
-        
+@app.cli.command("switch_to_staff", help="Switch to staff role")
+def switch_to_staff():
+    from App.models import User
+    user = User.query.first()
+    if user:
+        user.switchToStaff()
+        print('Switched to staff role')
+    else:
+        print("No users found.")     
 
         
