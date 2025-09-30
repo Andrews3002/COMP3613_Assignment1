@@ -62,24 +62,42 @@ You just need create a manager command function, for example:
 ```python
 # inside wsgi.py
 
-user_cli = AppGroup('user', help='User object commands')
+Initialize the database: 
+$ flask init
 
-@user_cli.cli.command("create-user")
-@click.argument("username")
-@click.argument("password")
-def create_user_command(username, password):
-    create_user(username, password)
-    print(f'{username} created!')
+Add a new student: 
+$ flask add_student John Doe
 
-app.cli.add_command(user_cli) # add the group to the cli
+List all students: 
+$ flask list_students
 
-```
+View leaderboard:
+$ flask view_leaderboard
 
-Then execute the command invoking with flask cli with command name and the relevant parameters
+Switch to a specific student role:
+$ flask switch_to_student <student_id>
 
-```bash
-$ flask user create bob bobpass
-```
+Switch to staff role:
+$ flask switch_to_staff
+
+Make a request to log hours {Student}:
+$ flask make_request <hours>
+
+Withdraw a pending request {Student}:
+$ flask withdraw_request
+
+View your accolades {Student}:
+$ flask view_accolades
+
+View all pending student requests {Staff}:
+$ flask view_requests
+
+Reject a student’s request {Staff}:
+$ flask reject_request <request_id>
+
+Confirm a student’s request and log hours {Staff}:
+$ flask confirm_request <request_id>
+
 
 
 # Running the Project

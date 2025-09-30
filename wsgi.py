@@ -83,7 +83,7 @@ def make_request(hours):
         student = Student.query.filter_by(studentID = user.getSelectedStudentID()).first()
         if student:
             if student.getRequestPending():
-                print("You already have a pending request.")
+                print("This student already has a pending request. (one at a time)")
                 return
             else:
                 student.makeRequest(hours)
@@ -107,7 +107,6 @@ def withdraw_request():
                 print("Request withdrawn successfully.")
     else:
         print("No users found.")
-
 
 @app.cli.command("view_accolades", help="View your accolades")
 def view_accolades():
